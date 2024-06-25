@@ -164,7 +164,6 @@ async function replaceNewVideos() {
 
             const channelIconDiv = document.createElement('div');
             channelIconDiv.className = 'channel-icon';
-            channelIconDiv.onclick = () => window.location.href = `https://www.youtube.com/channel/${channelId}`;
             channelIconDiv.style = `
                 flex: none;
                 width: 35px;
@@ -182,6 +181,12 @@ async function replaceNewVideos() {
                 background-position: center;
                 cursor: pointer;
             `;
+
+            channelIconDiv.addEventListener('click', (event) => {
+            //상위 요소 이벤트 막음
+                event.stopPropagation();
+                window.location.href = `https://www.youtube.com/channel/${channelId}`;
+            });
 
             if (videoTitle.length > 60) {
                 videoTitle = videoTitle.substring(0, 60) + " ...";
@@ -233,14 +238,28 @@ async function replaceNewVideos() {
 
             const channelNameDiv = document.createElement('div');
             channelNameDiv.className = 'info-text';
-            channelNameDiv.onclick = () => window.location.href = `https://www.youtube.com/channel/${channelId}`;
             channelNameDiv.textContent = channelName;
             channelNameDiv.style = `
                 font-size: 14px;
                 color: #aaa;
                 margin-bottom: 3px;
                 cursor: pointer;
+                transition: color 0.3s; /* Smooth transition for the hover effect */
             `;
+
+            channelNameDiv.addEventListener('click', (event) => {
+            //상위 요소 이벤트 막음
+                event.stopPropagation();
+                window.location.href = `https://www.youtube.com/channel/${channelId}`;
+            });
+
+            channelNameDiv.addEventListener('mouseenter', () => {
+                channelNameDiv.style.color = 'white';
+            });
+
+            channelNameDiv.addEventListener('mouseleave', () => {
+                channelNameDiv.style.color = '#aaa';
+            });
 
             const viewInfoDiv = document.createElement('div');
             viewInfoDiv.className = 'info-text';
