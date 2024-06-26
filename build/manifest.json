@@ -1,6 +1,6 @@
 {
-  "name": "yourtube",
-  "description": "리액트로 Yourtube",
+  "name": "YourTube",
+  "description": "YOUtube algoRithm TUning Browser Extension",
   "manifest_version": 3,
   "version": "1.0.0",
   "icons": {
