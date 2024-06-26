@@ -10,8 +10,6 @@ import tubeImage from "../static/Tube.png";
 
 const Popup = ({handleOpen}) => {
 
-    const now = new Date();
-
 
     return(
         <>

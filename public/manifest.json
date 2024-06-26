@@ -1,11 +1,11 @@
 {
-  "name": "yourtube",
-  "description": "리액트로 Yourtube",
+  "name": "YourTube",
+  "description": "YOUtube algoRithm TUning Browser Extension",
   "manifest_version": 3,
   "version": "1.0.0",
   "icons": {
-    "48": "images/youtube-48.png",
-    "128": "images/youtube-128.png"
+    "48": "images/YourTube_logo_48.png",
+    "128": "images/YourTube_logo_128.png"
   },
   "background": {
 	"service_worker": "scripts/background.js"
