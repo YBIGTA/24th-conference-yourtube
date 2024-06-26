@@ -1,54 +1,442 @@
 /* global chrome */
 
 async function replaceNewVideos() {
-    // 기존 요소 찾기
     var existingElement = document.querySelector('.style-scope ytd-rich-grid-renderer');
 
-    // 요소가 존재하는지 확인
     if (existingElement) {
-        // 기존 요소의 부모 요소 저장
         var parentElement = existingElement.parentNode;
-
-        // 기존 요소 제거
         existingElement.remove();
 
-        // 새로운 콘텐츠 생성
         const newContent = document.createElement('div');
         newContent.className = 'newcontent';
         newContent.id = 'mycontent';
 
-        // Add a container for the "최신순" text and the video content
-        const containerDiv = document.createElement('div');
-        containerDiv.className = 'container';
-        containerDiv.style = `
+        const mainContainer = document.createElement('div');
+        mainContainer.className = 'main-container';
+        mainContainer.style = `
             display: flex;
             flex-direction: column;
             width: 100%;
             align-items: flex-start;
-            margin-top: 50px;
+            margin-top: 25px;
             margin-bottom: 15px;
-            // background-color: lightyellow;
+            margin-left: 10px;
+        `;
+
+        const headerContainer = document.createElement('div');
+        headerContainer.style = `
+            display: flex;
+            justify-content: space-between;
+            width: 95%;
+            margin-bottom: 15px;
             margin-left: 20px;
         `;
 
-        // Add 최신순 text
-        const latestText = document.createElement('div');
-        latestText.textContent = '최신순';
-        latestText.style = `
-            font-size: 20px;
-            font-weight: bold;
-            color: white;
+        const categoryContainer = document.createElement('div');
+        categoryContainer.style = `
+            display: flex;
+            flex-wrap: wrap;
+            width: 90%;
+            // background-color: yellow;
         `;
 
-        containerDiv.appendChild(latestText);
-        containerDiv.appendChild(newContent);
-        parentElement.appendChild(containerDiv);
+        const settingsContainer = document.createElement('div');
+        settingsContainer.style = `
+            display: flex;
+            align-items: flex-start;
+            margin-left: auto;
+            padding-top: 0.7rem;
+        `;
+
+        const videoContainer = document.createElement('div');
+        videoContainer.className = 'video-container';
+        videoContainer.style = `
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: flex-start;
+            width: 100%;
+        `;
+
+        const categoryList = [
+            "전체", "영화/애니메이션", "자동차/교통", "음악", "애완동물/동물",
+            "스포츠", "여행/이벤트", "게임", "인물/블로그", "코미디",
+            "엔터테인먼트", "뉴스/정치", "노하우/스타일", "교육", "과학기술",
+            "비영리/사회운동"
+        ];
+
+        let selectedCategoryIndex = null;
+        let selectedSubCategoryIndex = null;
+        let displayedCategories = categoryList.slice(0, 16);
+        let subCategories = {};
+
+        function handleSubCategoryClick(index, subIndex, event) {
+            if (selectedCategoryIndex === index && selectedSubCategoryIndex === subIndex) {
+                selectedSubCategoryIndex = null;
+            } else {
+                selectedCategoryIndex = index;
+                selectedSubCategoryIndex = subIndex;
+            }
+            updateCategories(event);
+        }
+
+        function handleClick(index, event) {
+            if (selectedCategoryIndex === index) {
+                selectedCategoryIndex = null;
+                selectedSubCategoryIndex = null; // 카테고리 클릭 시 서브 카테고리 초기화
+            } else {
+                selectedCategoryIndex = index;
+                selectedSubCategoryIndex = null; // 새로운 카테고리 선택 시 서브 카테고리 초기화
+            }
+            updateCategories(event);
+        }
+
+        function updateCategories(event) {
+            categoryContainer.innerHTML = '';
+
+            displayedCategories.forEach((category, index) => {
+                const categoryBoxContainer = document.createElement('div');
+                categoryBoxContainer.className = 'category-box-container';
+                categoryBoxContainer.style = `
+                    display: flex;
+                    flex-direction: column;
+                    align-items: center;
+                    margin-bottom: 1rem;
+                    position: relative;
+                `;
+
+                const categoryBox = document.createElement('div');
+                categoryBox.style = `
+                    background-color: ${selectedCategoryIndex === index ? "#F1F1F1" : "#282828"};
+                    color: ${selectedCategoryIndex === index ? "#0F0F0F" : "#EFEFEF"};
+                    padding: 0.7rem 1.7rem;
+                    border-radius: 0.5rem;
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                    margin-right: 1rem;
+                    cursor: pointer;
+                    user-select: none;
+                    font-size: 14px;
+                `;
+                categoryBox.textContent = category;
+                categoryBox.addEventListener('click', (event) => handleClick(index, event));
+                categoryBoxContainer.appendChild(categoryBox);
+
+                if (selectedCategoryIndex === index && event) {
+                    const addCircleIconContainer = document.createElement('div');
+                    addCircleIconContainer.className = 'add-circle-icon-container';
+                    addCircleIconContainer.style = `
+                        display: flex;
+                        align-items: center;
+                        justify-content: flex-start;
+                        width: 100%;
+                        margin-top: 1rem;
+                        flex-direction: row;
+                    `;
+
+                    const addCircleIcon = document.createElement('div');
+                    addCircleIcon.innerHTML = `
+                        <svg id="icon-svg" height="36" viewBox="0 0 24 24" width="36" fill="#282828">
+                            <circle cx="12" cy="12" r="10" stroke="#282828" stroke-width="2" fill="#282828" />
+                            <line x1="12" y1="8" x2="12" y2="16" stroke="#EFEFEF" stroke-width="2"/>
+                            <line x1="8" y1="12" x2="16" y2="12" stroke="#EFEFEF" stroke-width="2"/>
+                        </svg>`;
+                    addCircleIcon.style = `
+                        cursor: pointer;
+                        margin-right: 1rem;
+                    `;
+
+                    const iconSvg = addCircleIcon.querySelector('#icon-svg');
+                    const iconCircle = iconSvg.querySelector('circle');
+                    const iconLines = iconSvg.querySelectorAll('line');
+
+                    // Hover 효과를 추가
+                    addCircleIcon.addEventListener('mouseenter', () => {
+                        iconCircle.setAttribute('fill', '#F1F1F1');
+                        iconCircle.setAttribute('stroke', '#F1F1F1');
+                        iconLines.forEach(line => line.setAttribute('stroke', '#0F0F0F'));
+                    });
+
+                    addCircleIcon.addEventListener('mouseleave', () => {
+                        iconCircle.setAttribute('fill', '#282828');
+                        iconCircle.setAttribute('stroke', '#282828');
+                        iconLines.forEach(line => line.setAttribute('stroke', '#EFEFEF'));
+                    });
+
+                    addCircleIcon.addEventListener('click', () => openNewCategoryPopup(index));
+                    addCircleIconContainer.appendChild(addCircleIcon);
+                    categoryBoxContainer.appendChild(addCircleIconContainer);
+
+                    // 서브카테고리 추가
+                    if (subCategories[category]) {
+                        subCategories[category].forEach((subCategory, subIndex) => {
+                            const subCategoryBox = document.createElement('div');
+                            subCategoryBox.style = `
+                                background-color: ${selectedCategoryIndex === index && selectedSubCategoryIndex === subIndex ? "#F1F1F1" : "#282828"};
+                                color: ${selectedCategoryIndex === index && selectedSubCategoryIndex === subIndex ? "#0F0F0F" : "#EFEFEF"};
+                                padding: 0.7rem 1.7rem;
+                                border-radius: 0.5rem;
+                                display: flex;
+                                align-items: center;
+                                justify-content: center;
+                                margin-right: 1rem; 
+                                cursor: pointer;
+                                user-select: none;
+                                font-size: 14px;
+                            `;
+                            subCategoryBox.textContent = subCategory;
+                            subCategoryBox.addEventListener('click', (event) => handleSubCategoryClick(index, subIndex, event));
+                            addCircleIconContainer.insertBefore(subCategoryBox, addCircleIconContainer.firstChild);
+                        });
+                    }
+                }
+
+                categoryContainer.appendChild(categoryBoxContainer);
+            });
+        }
 
 
+        const categorySettings = document.createElement('div');
+        categorySettings.style = `
+            color: #EFEFEF;
+            font-size: 14px;
+            cursor: pointer;
+            user-select: none;
+        `;
+        categorySettings.textContent = "카테고리 설정 >";
+        categorySettings.addEventListener('click', openCategorySettingsPopup);
+        settingsContainer.appendChild(categorySettings);
 
-         // Fetch the sample data from the JSON file via background script
-        // 크롬 확장 프로그램 보안 정책땜에 json파일을 background.js에서 접근해서 contentscript.js로 전달하는 로직
-        // 지금은 data/testData600.json으로 설정되어 있음.
+        headerContainer.appendChild(categoryContainer);
+        headerContainer.appendChild(settingsContainer);
+
+        function openCategorySettingsPopup() {
+            const popup = document.createElement('div');
+            popup.style = `
+                position: fixed;
+                top: 50%;
+                left: 50%;
+                transform: translate(-50%, -50%);
+                width: 300px;
+                background: #fff;
+                border-radius: 8px;
+                box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+                padding: 20px;
+                z-index: 1000;
+            `;
+
+            const title = document.createElement('h3');
+            title.textContent = "카테고리 설정";
+            title.style = `
+                margin-top: 0;
+                margin-bottom: 15px;
+            `;
+            popup.appendChild(title);
+
+            const checkboxContainer = document.createElement('div');
+            categoryList.forEach((category, index) => {
+                const checkboxLabel = document.createElement('label');
+                checkboxLabel.style = `
+                    display: flex;
+                    align-items: center;
+                    margin-bottom: 10px;
+                `;
+                const checkbox = document.createElement('input');
+                checkbox.type = 'checkbox';
+                checkbox.value = category;
+                checkbox.checked = displayedCategories.includes(category);
+                checkbox.addEventListener('change', () => handleCheckboxChange(index, checkbox.checked));
+                checkboxLabel.appendChild(checkbox);
+                checkboxLabel.appendChild(document.createTextNode(category));
+                checkboxContainer.appendChild(checkboxLabel);
+            });
+            popup.appendChild(checkboxContainer);
+
+            const saveButton = document.createElement('button');
+            saveButton.textContent = "저장";
+            saveButton.style = `
+                margin-top: 15px;
+                padding: 8px 12px;
+                background: #007bff;
+                color: #fff;
+                border: none;
+                border-radius: 4px;
+                cursor: pointer;
+            `;
+            saveButton.addEventListener('click', () => {
+                document.body.removeChild(popup);
+                updateCategories();
+            });
+            popup.appendChild(saveButton);
+
+            const closeButton = document.createElement('button');
+            closeButton.textContent = "닫기";
+            closeButton.style = `
+                margin-top: 15px;
+                margin-left: 10px;
+                padding: 8px 12px;
+                background: #6c757d;
+                color: #fff;
+                border: none;
+                border-radius: 4px;
+                cursor: pointer;
+            `;
+            closeButton.addEventListener('click', () => {
+                document.body.removeChild(popup);
+            });
+            popup.appendChild(closeButton);
+
+            document.body.appendChild(popup);
+        }
+
+        function handleCheckboxChange(index, isChecked) {
+            const category = categoryList[index];
+            if (isChecked) {
+                if (!displayedCategories.includes(category)) {
+                    displayedCategories.push(category);
+                }
+            } else {
+                displayedCategories = displayedCategories.filter(cat => cat !== category);
+            }
+        }
+
+        function openNewCategoryPopup(index) {
+            const popup = document.createElement('div');
+            popup.style = `
+                position: fixed;
+                top: 50%;
+                left: 50%;
+                transform: translate(-50%, -50%);
+                width: 300px;
+                background: #fff;
+                border-radius: 8px;
+                box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+                padding: 20px;
+                z-index: 1000;
+            `;
+
+            const title = document.createElement('h3');
+            title.textContent = "새로운 카테고리 추가";
+            title.style = `
+                margin-top: 0;
+                margin-bottom: 15px;
+            `;
+            popup.appendChild(title);
+
+            const categoryNameInput = document.createElement('input');
+            categoryNameInput.placeholder = "카테고리 이름";
+            categoryNameInput.style = `
+                width: 100%;
+                padding: 8px;
+                margin-bottom: 10px;
+                border: 1px solid #ccc;
+                border-radius: 4px;
+            `;
+            popup.appendChild(categoryNameInput);
+
+            const categoryDescriptionInput = document.createElement('textarea');
+            categoryDescriptionInput.placeholder = "카테고리 설명";
+            categoryDescriptionInput.style = `
+                width: 100%;
+                padding: 8px;
+                margin-bottom: 10px;
+                border: 1px solid #ccc;
+                border-radius: 4px;
+                resize: none;
+            `;
+            popup.appendChild(categoryDescriptionInput);
+
+            const saveButton = document.createElement('button');
+            saveButton.textContent = "추가";
+            saveButton.style = `
+                padding: 8px 12px;
+                background: #007bff;
+                color: #fff;
+                border: none;
+                border-radius: 4px;
+                cursor: pointer;
+            `;
+
+            saveButton.addEventListener('click', async () => {
+                const categoryName = categoryNameInput.value.trim();
+                const categoryDescription = categoryDescriptionInput.value.trim(); // 설명 추가
+
+                if (categoryName) {
+                    addNewSubCategory(index, categoryName);
+
+                    // GCP로 데이터 전송
+                    const sendDataToGCP = async () => {
+                        console.log("GCP function으로 세부 카테고리 모델 데이터 전달");
+
+                        const subCategoryData = {
+                            wholeCategoryID: 22,
+                            subCategoryName: categoryName,
+                            subCategoryDescription: categoryDescription // 설명 추가
+                        };
+
+                        console.log("전달하는 데이터:", subCategoryData);
+
+                        const gcpFunctionUrl = "https://asia-northeast3-yourtube-427304.cloudfunctions.net/sub-category-final";
+                        try {
+                            const response = await fetch(gcpFunctionUrl, {
+                                method: 'POST',
+                                headers: {
+                                    "Content-Type": "application/json",
+                                },
+                                body: JSON.stringify(subCategoryData),
+                            });
+
+                            if (!response.ok) {
+                                throw new Error('Network response was not ok ' + response.statusText);
+                            }
+
+                            const responseData = await response.json();
+                            console.log("Response from Cloud Function:", responseData);
+                        } catch (error) {
+                            console.error('Error sending data to GCP:', error);
+                        }
+                    };
+
+                    await sendDataToGCP(); // GCP 데이터 전송 함수 호출
+                }
+                document.body.removeChild(popup);
+            });
+            popup.appendChild(saveButton);
+
+            const closeButton = document.createElement('button');
+            closeButton.textContent = "닫기";
+            closeButton.style = `
+                margin-left: 10px;
+                padding: 8px 12px;
+                background: #6c757d;
+                color: #fff;
+                border: none;
+                border-radius: 4px;
+                cursor: pointer;
+            `;
+            closeButton.addEventListener('click', () => {
+                document.body.removeChild(popup);
+            });
+            popup.appendChild(closeButton);
+
+            document.body.appendChild(popup);
+        }
+
+        function addNewSubCategory(index, categoryName) {
+            const mainCategory = displayedCategories[index];
+            if (!subCategories[mainCategory]) {
+                subCategories[mainCategory] = [];
+            }
+            subCategories[mainCategory].push(categoryName);
+
+            updateCategories();
+        }
+
+        updateCategories();
+        mainContainer.appendChild(headerContainer);
+        mainContainer.appendChild(videoContainer);
+        parentElement.appendChild(mainContainer);
+
         let sampleData;
         try {
             const response = await new Promise((resolve, reject) => {
@@ -66,7 +454,6 @@ async function replaceNewVideos() {
             console.error('Error fetching the sample data:', error);
             return;
         }
-
 
         function getTimeDifference(publishTime) {
             const now = new Date();
@@ -112,7 +499,7 @@ async function replaceNewVideos() {
             youtubeBox.className = 'youtube-box';
             youtubeBox.style = `
                 display: flex;
-                width: 385px;
+                width: 380px;
                 height: 310px;
                 flex-direction: column;
                 padding: 1rem;
@@ -175,7 +562,6 @@ async function replaceNewVideos() {
                 justify-content: center;
                 font-size: 0.5rem;
                 overflow: hidden;
-                /* border: 1px solid #333; */
                 background-image: url('${channelIcon}');
                 background-size: cover;
                 background-position: center;
@@ -183,7 +569,6 @@ async function replaceNewVideos() {
             `;
 
             channelIconDiv.addEventListener('click', (event) => {
-            //상위 요소 이벤트 막음
                 event.stopPropagation();
                 window.location.href = `https://www.youtube.com/channel/${channelId}`;
             });
@@ -203,7 +588,6 @@ async function replaceNewVideos() {
                 margin-top: 5px;
                 overflow: hidden;
                 cursor: pointer;
-                // max-height: 48px;
             `;
             const titleText = document.createElement('div');
             titleText.className = 'title-text';
@@ -217,7 +601,6 @@ async function replaceNewVideos() {
                 -webkit-box-orient: vertical;
                 overflow: hidden;
                 text-overflow: ellipsis;
-                // line-height: 24px; /* Adjust line height as per design */
             `;
 
             titleDiv.appendChild(titleText);
@@ -231,9 +614,9 @@ async function replaceNewVideos() {
                 flex: 1;
                 display: flex;
                 flex-direction: column;
-                align-items: start; /* Align items to the start */
+                align-items: start;
                 padding-top: 0.5rem;
-                padding-left: 47px; /* Same margin as channel icon */
+                padding-left: 47px;
             `;
 
             const channelNameDiv = document.createElement('div');
@@ -244,11 +627,10 @@ async function replaceNewVideos() {
                 color: #aaa;
                 margin-bottom: 3px;
                 cursor: pointer;
-                transition: color 0.3s; /* Smooth transition for the hover effect */
+                transition: color 0.3s;
             `;
 
             channelNameDiv.addEventListener('click', (event) => {
-            //상위 요소 이벤트 막음
                 event.stopPropagation();
                 window.location.href = `https://www.youtube.com/channel/${channelId}`;
             });
@@ -281,22 +663,21 @@ async function replaceNewVideos() {
             return youtubeBox;
         }
 
-
         sampleData.forEach(videoData => {
             const videoBox = createYoutubeBox(videoData);
-            newContent.appendChild(videoBox);
+            videoContainer.appendChild(videoBox);
         });
 
-        parentElement.appendChild(newContent);
+        parentElement.appendChild(mainContainer);
 
-        parentElement.style.display = 'flex';
-        parentElement.style.flexDirection = 'column';
-        parentElement.style.justifyContent = 'center';
-        newContent.style.display = 'flex';
-        newContent.style.flexWrap = 'wrap'; // Allow wrapping
-        newContent.style.flexDirection = 'row'; // Align items in rows
-        newContent.style.marginLeft = '10px';
-        newContent.style.justifyContent = 'flex-start';
+        mainContainer.style.display = 'flex';
+        mainContainer.style.flexDirection = 'column';
+        mainContainer.style.justifyContent = 'center';
+        videoContainer.style.display = 'flex';
+        videoContainer.style.flexWrap = 'wrap';
+        videoContainer.style.flexDirection = 'row';
+        videoContainer.style.marginLeft = '10px';
+        videoContainer.style.justifyContent = 'flex-start';
     } else {
         console.error('기존 요소를 찾을 수 없습니다. 강력 새로고침 후 재실행합니다.');
         chrome.runtime.sendMessage({action: "forceReload"});

@@ -1,327 +1,392 @@
 // /* global chrome */
 //
 // async function replaceNewVideos() {
-//     // 기존 요소 찾기
 //     var existingElement = document.querySelector('.style-scope ytd-rich-grid-renderer');
 //
-//     // 요소가 존재하는지 확인
 //     if (existingElement) {
-//         // 기존 요소의 부모 요소 저장
 //         var parentElement = existingElement.parentNode;
-//
-//         // 기존 요소 제거
 //         existingElement.remove();
 //
-//         // 새로운 콘텐츠 생성
 //         const newContent = document.createElement('div');
 //         newContent.className = 'newcontent';
 //         newContent.id = 'mycontent';
 //
-//         // Add a container for the "최신순" text and the video content
-//         const containerDiv = document.createElement('div');
-//         containerDiv.className = 'container';
-//         containerDiv.style = `
+//         const mainContainer = document.createElement('div');
+//         mainContainer.className = 'main-container';
+//         mainContainer.style = `
 //             display: flex;
 //             flex-direction: column;
 //             width: 100%;
 //             align-items: flex-start;
-//             margin-top: 50px;
+//             margin-top: 25px;
 //             margin-bottom: 15px;
-//             // background-color: lightyellow;
+//             margin-left: 10px;
+//         `;
+//
+//         const headerContainer = document.createElement('div');
+//         headerContainer.style = `
+//             display: flex;
+//             justify-content: space-between;
+//             width: 95%;
+//             margin-bottom: 15px;
 //             margin-left: 20px;
 //         `;
 //
-//         // Add 최신순 text
-//         const latestText = document.createElement('div');
-//         latestText.textContent = '최신순';
-//         latestText.style = `
-//             font-size: 20px;
-//             font-weight: bold;
-//             color: white;
+//         const categoryContainer = document.createElement('div');
+//         categoryContainer.style = `
+//             display: flex;
+//             flex-wrap: wrap;
+//             width: 90%;
+//             background-color: yellow;
 //         `;
 //
-//         containerDiv.appendChild(latestText);
-//         containerDiv.appendChild(newContent);
-//         parentElement.appendChild(containerDiv);
+//         const settingsContainer = document.createElement('div');
+//         settingsContainer.style = `
+//             display: flex;
+//             align-items: flex-start;
+//             margin-left: auto;
+//             padding-top: 0.7rem;
+//         `;
 //
+//         const videoContainer = document.createElement('div');
+//         videoContainer.className = 'video-container';
+//         videoContainer.style = `
+//             display: flex;
+//             flex-wrap: wrap;
+//             justify-content: flex-start;
+//             width: 100%;
+//         `;
 //
-// //         const sampleData = [
-// //     {
-// //         "video_id": "FyyF5BrA8mw",
-// //         "channel_id": "UCiFidkSpe4qWYOwkazXuI7A",
-// //         "title": "고양이 지코 스팟 챌린지",
-// //         "link": "https://www.youtube.com/watch?v=FyyF5BrA8mw",
-// //         "ChannelTitle": "단추대감",
-// //         "published": "2024-06-13T11:45:53+00:00",
-// //         "description": "지아코 콜라보 단츄",
-// //         "thumbnail": [
-// //             {
-// //                 "url": "https://i3.ytimg.com/vi/FyyF5BrA8mw/hqdefault.jpg",
-// //                 "width": "480",
-// //                 "height": "360"
-// //             }
-// //         ],
-// //         "views": "761",
-// //         "channel_icon": "https://yt3.ggpht.com/IejMCBfp7O810mUG3tfnpiOBjzAScXBJJ9kAAQC15zl4_ae2SFfMtt4gY7aaRPp8dnRmDJx2PA=s88-c-k-c0x00ffffff-no-rj"
-// //     },
-// //     {
-// //         "video_id": "mWSN-qmEaWY",
-// //         "channel_id": "UCiFidkSpe4qWYOwkazXuI7A",
-// //         "title": "고양이 분노의 콧김 레전드",
-// //         "link": "https://www.youtube.com/watch?v=mWSN-qmEaWY",
-// //         "ChannelTitle": "단추대감",
-// //         "published": "2024-06-10T11:34:09+00:00",
-// //         "description": "쩔엇당",
-// //         "thumbnail": [
-// //             {
-// //                 "url": "https://i2.ytimg.com/vi/mWSN-qmEaWY/hqdefault.jpg",
-// //                 "width": "480",
-// //                 "height": "360"
-// //             }
-// //         ],
-// //         "views": "80",
-// //         "channel_icon": "https://yt3.ggpht.com/IejMCBfp7O810mUG3tfnpiOBjzAScXBJJ9kAAQC15zl4_ae2SFfMtt4gY7aaRPp8dnRmDJx2PA=s88-c-k-c0x00ffffff-no-rj"
-// //     },
-// //     {
-// //         "video_id": "XUKYD10ayQ4",
-// //         "channel_id": "UCiFidkSpe4qWYOwkazXuI7A",
-// //         "title": "꽁꽁 얼어붙은 한강위를 고양이가 걸어다닙니다 #고양이 #catvideos #고양이영상 #hiphop #cat",
-// //         "link": "https://www.youtube.com/watch?v=XUKYD10ayQ4",
-// //         "ChannelTitle": "단추대감",
-// //         "published": "2024-06-09T01:23:35+00:00",
-// //         "description": "꽁꽁얼어붙은 단추마음",
-// //         "thumbnail": [
-// //             {
-// //                 "url": "https://i1.ytimg.com/vi/XUKYD10ayQ4/hqdefault.jpg",
-// //                 "width": "480",
-// //                 "height": "360"
-// //             }
-// //         ],
-// //         "views": "509",
-// //         "channel_icon": "https://yt3.ggpht.com/IejMCBfp7O810mUG3tfnpiOBjzAScXBJJ9kAAQC15zl4_ae2SFfMtt4gY7aaRPp8dnRmDJx2PA=s88-c-k-c0x00ffffff-no-rj"
-// //     },
-// //     {
-// //         "video_id": "AXfZmWRa8vc",
-// //         "channel_id": "UCiFidkSpe4qWYOwkazXuI7A",
-// //         "title": "요즘들어 부쩍 애교가 많아진 고양이씨",
-// //         "link": "https://www.youtube.com/watch?v=AXfZmWRa8vc",
-// //         "ChannelTitle": "단추대감",
-// //         "published": "2024-05-19T13:05:45+00:00",
-// //         "description": "이거 곤란해 귀여워서 숨 안쉬어졍\n\n\n#치즈냥\n#킹냥이\n#고양이\n#고영희\n#귀여운고양이",
-// //         "thumbnail": [
-// //             {
-// //                 "url": "https://i2.ytimg.com/vi/AXfZmWRa8vc/hqdefault.jpg",
-// //                 "width": "480",
-// //                 "height": "360"
-// //             }
-// //         ],
-// //         "views": "358",
-// //         "channel_icon": "https://yt3.ggpht.com/IejMCBfp7O810mUG3tfnpiOBjzAScXBJJ9kAAQC15zl4_ae2SFfMtt4gY7aaRPp8dnRmDJx2PA=s88-c-k-c0x00ffffff-no-rj"
-// //     },
-// //     {
-// //         "video_id": "mDq37jYzmy8",
-// //         "channel_id": "UCiFidkSpe4qWYOwkazXuI7A",
-// //         "title": "귀여운 고양이 단추 입구녕",
-// //         "link": "https://www.youtube.com/watch?v=mDq37jYzmy8",
-// //         "ChannelTitle": "단추대감",
-// //         "published": "2024-05-16T11:09:49+00:00",
-// //         "description": "",
-// //         "thumbnail": [
-// //             {
-// //                 "url": "https://i2.ytimg.com/vi/mDq37jYzmy8/hqdefault.jpg",
-// //                 "width": "480",
-// //                 "height": "360"
-// //             }
-// //         ],
-// //         "views": "777",
-// //         "channel_icon": "https://yt3.ggpht.com/IejMCBfp7O810mUG3tfnpiOBjzAScXBJJ9kAAQC15zl4_ae2SFfMtt4gY7aaRPp8dnRmDJx2PA=s88-c-k-c0x00ffffff-no-rj"
-// //     },
-// //     {
-// //         "video_id": "0X_TElKMG6c",
-// //         "channel_id": "UCiFidkSpe4qWYOwkazXuI7A",
-// //         "title": "더위먹은 고양이",
-// //         "link": "https://www.youtube.com/watch?v=0X_TElKMG6c",
-// //         "ChannelTitle": "단추대감",
-// //         "published": "2024-05-05T12:10:27+00:00",
-// //         "description": "",
-// //         "thumbnail": [
-// //             {
-// //                 "url": "https://i1.ytimg.com/vi/0X_TElKMG6c/hqdefault.jpg",
-// //                 "width": "480",
-// //                 "height": "360"
-// //             }
-// //         ],
-// //         "views": "65",
-// //         "channel_icon": "https://yt3.ggpht.com/IejMCBfp7O810mUG3tfnpiOBjzAScXBJJ9kAAQC15zl4_ae2SFfMtt4gY7aaRPp8dnRmDJx2PA=s88-c-k-c0x00ffffff-no-rj"
-// //     },
-// //     {
-// //         "video_id": "ucBa4CgwZ_k",
-// //         "channel_id": "UCiFidkSpe4qWYOwkazXuI7A",
-// //         "title": "단추야 놔줘",
-// //         "link": "https://www.youtube.com/watch?v=ucBa4CgwZ_k",
-// //         "ChannelTitle": "단추대감",
-// //         "published": "2024-05-03T11:57:55+00:00",
-// //         "description": "무셔운단추\n\n#고양이\n#킹냥이\n#치즈냥\n#빡친고양이\n#귀여운고양이",
-// //         "thumbnail": [
-// //             {
-// //                 "url": "https://i2.ytimg.com/vi/ucBa4CgwZ_k/hqdefault.jpg",
-// //                 "width": "480",
-// //                 "height": "360"
-// //             }
-// //         ],
-// //         "views": "321",
-// //         "channel_icon": "https://yt3.ggpht.com/IejMCBfp7O810mUG3tfnpiOBjzAScXBJJ9kAAQC15zl4_ae2SFfMtt4gY7aaRPp8dnRmDJx2PA=s88-c-k-c0x00ffffff-no-rj"
-// //     },
-// //     {
-// //         "video_id": "9u0M6wlgbGc",
-// //         "channel_id": "UCiFidkSpe4qWYOwkazXuI7A",
-// //         "title": "고양이 단추 생일파티 제 5회",
-// //         "link": "https://www.youtube.com/watch?v=9u0M6wlgbGc",
-// //         "ChannelTitle": "단추대감",
-// //         "published": "2024-04-28T13:27:21+00:00",
-// //         "description": "단추사랑훼\n\n#고양이\n#킹냥이\n#치즈냥\n#힐링\n#고양이생일파티",
-// //         "thumbnail": [
-// //             {
-// //                 "url": "https://i2.ytimg.com/vi/9u0M6wlgbGc/hqdefault.jpg",
-// //                 "width": "480",
-// //                 "height": "360"
-// //             }
-// //         ],
-// //         "views": "245",
-// //         "channel_icon": "https://yt3.ggpht.com/IejMCBfp7O810mUG3tfnpiOBjzAScXBJJ9kAAQC15zl4_ae2SFfMtt4gY7aaRPp8dnRmDJx2PA=s88-c-k-c0x00ffffff-no-rj"
-// //     },
-// //     {
-// //         "video_id": "18QE63v0MC0",
-// //         "channel_id": "UCiFidkSpe4qWYOwkazXuI7A",
-// //         "title": "고양이 뱃살 만지기",
-// //         "link": "https://www.youtube.com/watch?v=18QE63v0MC0",
-// //         "ChannelTitle": "단추대감",
-// //         "published": "2024-04-15T13:34:50+00:00",
-// //         "description": "",
-// //         "thumbnail": [
-// //             {
-// //                 "url": "https://i2.ytimg.com/vi/18QE63v0MC0/hqdefault.jpg",
-// //                 "width": "480",
-// //                 "height": "360"
-// //             }
-// //         ],
-// //         "views": "402",
-// //         "channel_icon": "https://yt3.ggpht.com/IejMCBfp7O810mUG3tfnpiOBjzAScXBJJ9kAAQC15zl4_ae2SFfMtt4gY7aaRPp8dnRmDJx2PA=s88-c-k-c0x00ffffff-no-rj"
-// //     },
-// //     {
-// //         "video_id": "wpxy9__AY6E",
-// //         "channel_id": "UCiFidkSpe4qWYOwkazXuI7A",
-// //         "title": "이상한 집사랑 놀아주는 착한 고양이",
-// //         "link": "https://www.youtube.com/watch?v=wpxy9__AY6E",
-// //         "ChannelTitle": "단추대감",
-// //         "published": "2024-04-14T10:08:40+00:00",
-// //         "description": "울단츄. 착해빠졌어\n\n#고양이\n#킹냥이\n#치즈냥\n#치즈고양이\n#고영희",
-// //         "thumbnail": [
-// //             {
-// //                 "url": "https://i4.ytimg.com/vi/wpxy9__AY6E/hqdefault.jpg",
-// //                 "width": "480",
-// //                 "height": "360"
-// //             }
-// //         ],
-// //         "views": "682",
-// //         "channel_icon": "https://yt3.ggpht.com/IejMCBfp7O810mUG3tfnpiOBjzAScXBJJ9kAAQC15zl4_ae2SFfMtt4gY7aaRPp8dnRmDJx2PA=s88-c-k-c0x00ffffff-no-rj"
-// //     },
-// //     {
-// //         "video_id": "9ACD7mfjI_s",
-// //         "channel_id": "UCiFidkSpe4qWYOwkazXuI7A",
-// //         "title": "주먹질하는 고양이 단추",
-// //         "link": "https://www.youtube.com/watch?v=9ACD7mfjI_s",
-// //         "ChannelTitle": "단추대감",
-// //         "published": "2024-03-30T14:27:54+00:00",
-// //         "description": "",
-// //         "thumbnail": [
-// //             {
-// //                 "url": "https://i2.ytimg.com/vi/9ACD7mfjI_s/hqdefault.jpg",
-// //                 "width": "480",
-// //                 "height": "360"
-// //             }
-// //         ],
-// //         "views": "648",
-// //         "channel_icon": "https://yt3.ggpht.com/IejMCBfp7O810mUG3tfnpiOBjzAScXBJJ9kAAQC15zl4_ae2SFfMtt4gY7aaRPp8dnRmDJx2PA=s88-c-k-c0x00ffffff-no-rj"
-// //     },
-// //     {
-// //         "video_id": "lVKJztuxiJU",
-// //         "channel_id": "UCiFidkSpe4qWYOwkazXuI7A",
-// //         "title": "고양이와 출근준비",
-// //         "link": "https://www.youtube.com/watch?v=lVKJztuxiJU",
-// //         "ChannelTitle": "단추대감",
-// //         "published": "2024-03-28T13:03:31+00:00",
-// //         "description": "#킹냥이단추\n#고양이\n#치즈고양이\n#출근",
-// //         "thumbnail": [
-// //             {
-// //                 "url": "https://i1.ytimg.com/vi/lVKJztuxiJU/hqdefault.jpg",
-// //                 "width": "480",
-// //                 "height": "360"
-// //             }
-// //         ],
-// //         "views": "291",
-// //         "channel_icon": "https://yt3.ggpht.com/IejMCBfp7O810mUG3tfnpiOBjzAScXBJJ9kAAQC15zl4_ae2SFfMtt4gY7aaRPp8dnRmDJx2PA=s88-c-k-c0x00ffffff-no-rj"
-// //     },
-// //     {
-// //         "video_id": "2tUBlUDdQMc",
-// //         "channel_id": "UCiFidkSpe4qWYOwkazXuI7A",
-// //         "title": "눈물의 고양이 뽀삐뽀챌린지",
-// //         "link": "https://www.youtube.com/watch?v=2tUBlUDdQMc",
-// //         "ChannelTitle": "단추대감",
-// //         "published": "2024-03-15T09:17:46+00:00",
-// //         "description": "",
-// //         "thumbnail": [
-// //             {
-// //                 "url": "https://i3.ytimg.com/vi/2tUBlUDdQMc/hqdefault.jpg",
-// //                 "width": "480",
-// //                 "height": "360"
-// //             }
-// //         ],
-// //         "views": "421",
-// //         "channel_icon": "https://yt3.ggpht.com/IejMCBfp7O810mUG3tfnpiOBjzAScXBJJ9kAAQC15zl4_ae2SFfMtt4gY7aaRPp8dnRmDJx2PA=s88-c-k-c0x00ffffff-no-rj"
-// //     },
-// //     {
-// //         "video_id": "IwFiCe8W7GM",
-// //         "channel_id": "UCiFidkSpe4qWYOwkazXuI7A",
-// //         "title": "고양이스러운 고양이 단추",
-// //         "link": "https://www.youtube.com/watch?v=IwFiCe8W7GM",
-// //         "ChannelTitle": "단추대감",
-// //         "published": "2024-03-10T12:39:31+00:00",
-// //         "description": "고양이스러운게 뭔지 알려주마\n\n#고양이\n#킹냥이\n#치즈냥\n#치즈고양이\n#귀여운고양이",
-// //         "thumbnail": [
-// //             {
-// //                 "url": "https://i2.ytimg.com/vi/IwFiCe8W7GM/hqdefault.jpg",
-// //                 "width": "480",
-// //                 "height": "360"
-// //             }
-// //         ],
-// //         "views": "349",
-// //         "channel_icon": "https://yt3.ggpht.com/IejMCBfp7O810mUG3tfnpiOBjzAScXBJJ9kAAQC15zl4_ae2SFfMtt4gY7aaRPp8dnRmDJx2PA=s88-c-k-c0x00ffffff-no-rj"
-// //     },
-// //     {
-// //         "video_id": "5jipbxTr8M4",
-// //         "channel_id": "UCiFidkSpe4qWYOwkazXuI7A",
-// //         "title": "심한말하는 고양이 일상",
-// //         "link": "https://www.youtube.com/watch?v=5jipbxTr8M4",
-// //         "ChannelTitle": "단추대감",
-// //         "published": "2024-03-02T14:02:31+00:00",
-// //         "description": "괴팍한 우리고양이♥️\n\n#고양이\n#킹냥이\n#치즈냥\n#치즈냥이",
-// //         "thumbnail": [
-// //             {
-// //                 "url": "https://i2.ytimg.com/vi/5jipbxTr8M4/hqdefault.jpg",
-// //                 "width": "480",
-// //                 "height": "360"
-// //             }
-// //         ],
-// //         "views": "1496",
-// //         "channel_icon": "https://yt3.ggpht.com/IejMCBfp7O810mUG3tfnpiOBjzAScXBJJ9kAAQC15zl4_ae2SFfMtt4gY7aaRPp8dnRmDJx2PA=s88-c-k-c0x00ffffff-no-rj"
-// //     }
-// // ]
+//         const categoryList = [
+//             "전체", "영화/애니메이션", "자동차/교통", "음악", "애완동물/동물",
+//             "스포츠", "여행/이벤트", "게임", "인물/블로그", "코미디",
+//             "엔터테인먼트", "뉴스/정치", "노하우/스타일", "교육", "과학기술",
+//             "비영리/사회운동"
+//         ];
 //
+//         let selectedCategoryIndex = null;
+//         let displayedCategories = categoryList.slice(0, 16);
+//         let subCategories = {};
 //
-//          // Fetch the sample data from the JSON file via background script
-//         // 크롬 확장 프로그램 보안 정책땜에 json파일을 background.js에서 접근해서 contentscript.js로 전달하는 로직
-//         // 지금은 data/testData600.json으로 설정되어 있음.
+//         function handleClick(index, event) {
+//             if (selectedCategoryIndex === index) {
+//                 selectedCategoryIndex = null;
+//             } else {
+//                 selectedCategoryIndex = index;
+//             }
+//             updateCategories(event);
+//         }
+//
+//         function updateCategories(event) {
+//             categoryContainer.innerHTML = '';
+//
+//             displayedCategories.forEach((category, index) => {
+//                 const categoryBoxContainer = document.createElement('div');
+//                 categoryBoxContainer.className = 'category-box-container';
+//                 categoryBoxContainer.style = `
+//                     display: flex;
+//                     flex-direction: column;
+//                     align-items: center;
+//                     margin-bottom: 1rem;
+//                     position: relative;
+//                     background-color: blue;
+//                 `;
+//
+//                 const categoryBox = document.createElement('div');
+//                 categoryBox.style = `
+//                     background-color: ${selectedCategoryIndex === index ? "#F1F1F1" : "#282828"};
+//                     color: ${selectedCategoryIndex === index ? "#0F0F0F" : "#EFEFEF"};
+//                     padding: 0.7rem 1.7rem;
+//                     border-radius: 0.5rem;
+//                     display: flex;
+//                     align-items: center;
+//                     justify-content: center;
+//                     margin-right: 1rem;
+//                     cursor: pointer;
+//                     user-select: none;
+//                     font-size: 14px;
+//                 `;
+//                 categoryBox.textContent = category;
+//                 categoryBox.addEventListener('click', (event) => handleClick(index, event));
+//                 categoryBoxContainer.appendChild(categoryBox);
+//
+//                 if (selectedCategoryIndex === index && event) {
+//                     const addCircleIconContainer = document.createElement('div');
+//                     addCircleIconContainer.className = 'add-circle-icon-container';
+//                     addCircleIconContainer.style = `
+//                         display: flex;
+//                         align-items: center;
+//                         justify-content: center;
+//                         width: 100%;
+//                         margin-top: 1rem;
+//                         flex-direction: row;
+//                         background-color: red;
+//                     `;
+//
+//                     const addCircleIcon = document.createElement('div');
+//                     addCircleIcon.innerHTML = `
+//                         <svg id="icon-svg" height="36" viewBox="0 0 24 24" width="36" fill="#282828">
+//                             <circle cx="12" cy="12" r="10" stroke="#282828" stroke-width="2" fill="#282828" />
+//                             <line x1="12" y1="8" x2="12" y2="16" stroke="#EFEFEF" stroke-width="2"/>
+//                             <line x1="8" y1="12" x2="16" y2="12" stroke="#EFEFEF" stroke-width="2"/>
+//                         </svg>`;
+//                     addCircleIcon.style = `
+//                         cursor: pointer;
+//                         margin-right: 1rem;
+//                     `;
+//
+//                     const iconSvg = addCircleIcon.querySelector('#icon-svg');
+//                     const iconCircle = iconSvg.querySelector('circle');
+//                     const iconLines = iconSvg.querySelectorAll('line');
+//
+//                     // Hover 효과를 추가
+//                     addCircleIcon.addEventListener('mouseenter', () => {
+//                         iconCircle.setAttribute('fill', '#F1F1F1');
+//                         iconCircle.setAttribute('stroke', '#F1F1F1');
+//                         iconLines.forEach(line => line.setAttribute('stroke', '#0F0F0F'));
+//                     });
+//
+//                     addCircleIcon.addEventListener('mouseleave', () => {
+//                         iconCircle.setAttribute('fill', '#282828');
+//                         iconCircle.setAttribute('stroke', '#282828');
+//                         iconLines.forEach(line => line.setAttribute('stroke', '#EFEFEF'));
+//                     });
+//
+//                     addCircleIcon.addEventListener('click', () => openNewCategoryPopup(index));
+//                     addCircleIconContainer.appendChild(addCircleIcon);
+//                     categoryBoxContainer.appendChild(addCircleIconContainer);
+//
+//                     // 서브카테고리 추가
+//                     if (subCategories[category]) {
+//                         subCategories[category].forEach(subCategory => {
+//                             const subCategoryBox = document.createElement('div');
+//                             subCategoryBox.style = `
+//                                 background-color: #282828;
+//                                 color: #EFEFEF;
+//                                 padding: 0.7rem 1.7rem;
+//                                 border-radius: 0.5rem;
+//                                 display: flex;
+//                                 align-items: center;
+//                                 justify-content: center;
+//                                 margin-top: 1rem;
+//                                 margin-right: 1rem;
+//                                 cursor: pointer;
+//                                 user-select: none;
+//                                 font-size: 14px;
+//                             `;
+//                             subCategoryBox.textContent = subCategory;
+//                             addCircleIconContainer.insertBefore(subCategoryBox, addCircleIconContainer.firstChild);
+//                         });
+//                     }
+//                 }
+//
+//                 categoryContainer.appendChild(categoryBoxContainer);
+//             });
+//         }
+//
+//         const categorySettings = document.createElement('div');
+//         categorySettings.style = `
+//             color: #EFEFEF;
+//             font-size: 14px;
+//             cursor: pointer;
+//             user-select: none;
+//         `;
+//         categorySettings.textContent = "카테고리 설정 >";
+//         categorySettings.addEventListener('click', openCategorySettingsPopup);
+//         settingsContainer.appendChild(categorySettings);
+//
+//         headerContainer.appendChild(categoryContainer);
+//         headerContainer.appendChild(settingsContainer);
+//
+//         function openCategorySettingsPopup() {
+//             const popup = document.createElement('div');
+//             popup.style = `
+//                 position: fixed;
+//                 top: 50%;
+//                 left: 50%;
+//                 transform: translate(-50%, -50%);
+//                 width: 300px;
+//                 background: #fff;
+//                 border-radius: 8px;
+//                 box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+//                 padding: 20px;
+//                 z-index: 1000;
+//             `;
+//
+//             const title = document.createElement('h3');
+//             title.textContent = "카테고리 설정";
+//             title.style = `
+//                 margin-top: 0;
+//                 margin-bottom: 15px;
+//             `;
+//             popup.appendChild(title);
+//
+//             const checkboxContainer = document.createElement('div');
+//             categoryList.forEach((category, index) => {
+//                 const checkboxLabel = document.createElement('label');
+//                 checkboxLabel.style = `
+//                     display: flex;
+//                     align-items: center;
+//                     margin-bottom: 10px;
+//                 `;
+//                 const checkbox = document.createElement('input');
+//                 checkbox.type = 'checkbox';
+//                 checkbox.value = category;
+//                 checkbox.checked = displayedCategories.includes(category);
+//                 checkbox.addEventListener('change', () => handleCheckboxChange(index, checkbox.checked));
+//                 checkboxLabel.appendChild(checkbox);
+//                 checkboxLabel.appendChild(document.createTextNode(category));
+//                 checkboxContainer.appendChild(checkboxLabel);
+//             });
+//             popup.appendChild(checkboxContainer);
+//
+//             const saveButton = document.createElement('button');
+//             saveButton.textContent = "저장";
+//             saveButton.style = `
+//                 margin-top: 15px;
+//                 padding: 8px 12px;
+//                 background: #007bff;
+//                 color: #fff;
+//                 border: none;
+//                 border-radius: 4px;
+//                 cursor: pointer;
+//             `;
+//             saveButton.addEventListener('click', () => {
+//                 document.body.removeChild(popup);
+//                 updateCategories();
+//             });
+//             popup.appendChild(saveButton);
+//
+//             const closeButton = document.createElement('button');
+//             closeButton.textContent = "닫기";
+//             closeButton.style = `
+//                 margin-top: 15px;
+//                 margin-left: 10px;
+//                 padding: 8px 12px;
+//                 background: #6c757d;
+//                 color: #fff;
+//                 border: none;
+//                 border-radius: 4px;
+//                 cursor: pointer;
+//             `;
+//             closeButton.addEventListener('click', () => {
+//                 document.body.removeChild(popup);
+//             });
+//             popup.appendChild(closeButton);
+//
+//             document.body.appendChild(popup);
+//         }
+//
+//         function handleCheckboxChange(index, isChecked) {
+//             const category = categoryList[index];
+//             if (isChecked) {
+//                 if (!displayedCategories.includes(category)) {
+//                     displayedCategories.push(category);
+//                 }
+//             } else {
+//                 displayedCategories = displayedCategories.filter(cat => cat !== category);
+//             }
+//         }
+//
+//         function openNewCategoryPopup(index) {
+//             const popup = document.createElement('div');
+//             popup.style = `
+//                 position: fixed;
+//                 top: 50%;
+//                 left: 50%;
+//                 transform: translate(-50%, -50%);
+//                 width: 300px;
+//                 background: #fff;
+//                 border-radius: 8px;
+//                 box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+//                 padding: 20px;
+//                 z-index: 1000;
+//             `;
+//
+//             const title = document.createElement('h3');
+//             title.textContent = "새로운 카테고리 추가";
+//             title.style = `
+//                 margin-top: 0;
+//                 margin-bottom: 15px;
+//             `;
+//             popup.appendChild(title);
+//
+//             const categoryNameInput = document.createElement('input');
+//             categoryNameInput.placeholder = "카테고리 이름";
+//             categoryNameInput.style = `
+//                 width: 100%;
+//                 padding: 8px;
+//                 margin-bottom: 10px;
+//                 border: 1px solid #ccc;
+//                 border-radius: 4px;
+//             `;
+//             popup.appendChild(categoryNameInput);
+//
+//             const categoryDescriptionInput = document.createElement('textarea');
+//             categoryDescriptionInput.placeholder = "카테고리 설명";
+//             categoryDescriptionInput.style = `
+//                 width: 100%;
+//                 padding: 8px;
+//                 margin-bottom: 10px;
+//                 border: 1px solid #ccc;
+//                 border-radius: 4px;
+//                 resize: none;
+//             `;
+//             popup.appendChild(categoryDescriptionInput);
+//
+//             const saveButton = document.createElement('button');
+//             saveButton.textContent = "저장";
+//             saveButton.style = `
+//                 padding: 8px 12px;
+//                 background: #007bff;
+//                 color: #fff;
+//                 border: none;
+//                 border-radius: 4px;
+//                 cursor: pointer;
+//             `;
+//             saveButton.addEventListener('click', () => {
+//                 const categoryName = categoryNameInput.value.trim();
+//                 if (categoryName) {
+//                     addNewSubCategory(index, categoryName);
+//                 }
+//                 document.body.removeChild(popup);
+//             });
+//             popup.appendChild(saveButton);
+//
+//             const closeButton = document.createElement('button');
+//             closeButton.textContent = "닫기";
+//             closeButton.style = `
+//                 margin-left: 10px;
+//                 padding: 8px 12px;
+//                 background: #6c757d;
+//                 color: #fff;
+//                 border: none;
+//                 border-radius: 4px;
+//                 cursor: pointer;
+//             `;
+//             closeButton.addEventListener('click', () => {
+//                 document.body.removeChild(popup);
+//             });
+//             popup.appendChild(closeButton);
+//
+//             document.body.appendChild(popup);
+//         }
+//
+//         function addNewSubCategory(index, categoryName) {
+//             const mainCategory = displayedCategories[index];
+//             if (!subCategories[mainCategory]) {
+//                 subCategories[mainCategory] = [];
+//             }
+//             subCategories[mainCategory].push(categoryName);
+//
+//             updateCategories();
+//         }
+//
+//         updateCategories();
+//         mainContainer.appendChild(headerContainer);
+//         mainContainer.appendChild(videoContainer);
+//         parentElement.appendChild(mainContainer);
+//
 //         let sampleData;
 //         try {
 //             const response = await new Promise((resolve, reject) => {
@@ -339,7 +404,6 @@
 //             console.error('Error fetching the sample data:', error);
 //             return;
 //         }
-//
 //
 //         function getTimeDifference(publishTime) {
 //             const now = new Date();
@@ -385,12 +449,13 @@
 //             youtubeBox.className = 'youtube-box';
 //             youtubeBox.style = `
 //                 display: flex;
-//                 width: 385px;
+//                 width: 380px;
 //                 height: 310px;
 //                 flex-direction: column;
 //                 padding: 1rem;
 //                 margin-bottom: 20px;
 //                 color: #fff;
+//                 cursor: pointer;
 //             `;
 //             youtubeBox.onclick = () => window.location.href = `https://www.youtube.com/watch?v=${videoId}`;
 //
@@ -436,7 +501,6 @@
 //
 //             const channelIconDiv = document.createElement('div');
 //             channelIconDiv.className = 'channel-icon';
-//             channelIconDiv.onclick = () => window.location.href = `https://www.youtube.com/channel/${channelId}`;
 //             channelIconDiv.style = `
 //                 flex: none;
 //                 width: 35px;
@@ -448,12 +512,16 @@
 //                 justify-content: center;
 //                 font-size: 0.5rem;
 //                 overflow: hidden;
-//                 /* border: 1px solid #333; */
 //                 background-image: url('${channelIcon}');
 //                 background-size: cover;
 //                 background-position: center;
 //                 cursor: pointer;
 //             `;
+//
+//             channelIconDiv.addEventListener('click', (event) => {
+//                 event.stopPropagation();
+//                 window.location.href = `https://www.youtube.com/channel/${channelId}`;
+//             });
 //
 //             if (videoTitle.length > 60) {
 //                 videoTitle = videoTitle.substring(0, 60) + " ...";
@@ -470,7 +538,6 @@
 //                 margin-top: 5px;
 //                 overflow: hidden;
 //                 cursor: pointer;
-//                 // max-height: 48px;
 //             `;
 //             const titleText = document.createElement('div');
 //             titleText.className = 'title-text';
@@ -484,7 +551,6 @@
 //                 -webkit-box-orient: vertical;
 //                 overflow: hidden;
 //                 text-overflow: ellipsis;
-//                 // line-height: 24px; /* Adjust line height as per design */
 //             `;
 //
 //             titleDiv.appendChild(titleText);
@@ -498,21 +564,34 @@
 //                 flex: 1;
 //                 display: flex;
 //                 flex-direction: column;
-//                 align-items: start; /* Align items to the start */
+//                 align-items: start;
 //                 padding-top: 0.5rem;
-//                 padding-left: 47px; /* Same margin as channel icon */
+//                 padding-left: 47px;
 //             `;
 //
 //             const channelNameDiv = document.createElement('div');
 //             channelNameDiv.className = 'info-text';
-//             channelNameDiv.onclick = () => window.location.href = `https://www.youtube.com/channel/${channelId}`;
 //             channelNameDiv.textContent = channelName;
 //             channelNameDiv.style = `
 //                 font-size: 14px;
 //                 color: #aaa;
 //                 margin-bottom: 3px;
 //                 cursor: pointer;
+//                 transition: color 0.3s;
 //             `;
+//
+//             channelNameDiv.addEventListener('click', (event) => {
+//                 event.stopPropagation();
+//                 window.location.href = `https://www.youtube.com/channel/${channelId}`;
+//             });
+//
+//             channelNameDiv.addEventListener('mouseenter', () => {
+//                 channelNameDiv.style.color = 'white';
+//             });
+//
+//             channelNameDiv.addEventListener('mouseleave', () => {
+//                 channelNameDiv.style.color = '#aaa';
+//             });
 //
 //             const viewInfoDiv = document.createElement('div');
 //             viewInfoDiv.className = 'info-text';
@@ -534,22 +613,21 @@
 //             return youtubeBox;
 //         }
 //
-//
 //         sampleData.forEach(videoData => {
 //             const videoBox = createYoutubeBox(videoData);
-//             newContent.appendChild(videoBox);
+//             videoContainer.appendChild(videoBox);
 //         });
 //
-//         parentElement.appendChild(newContent);
+//         parentElement.appendChild(mainContainer);
 //
-//         parentElement.style.display = 'flex';
-//         parentElement.style.flexDirection = 'column';
-//         parentElement.style.justifyContent = 'center';
-//         newContent.style.display = 'flex';
-//         newContent.style.flexWrap = 'wrap'; // Allow wrapping
-//         newContent.style.flexDirection = 'row'; // Align items in rows
-//         newContent.style.marginLeft = '10px';
-//         newContent.style.justifyContent = 'flex-start';
+//         mainContainer.style.display = 'flex';
+//         mainContainer.style.flexDirection = 'column';
+//         mainContainer.style.justifyContent = 'center';
+//         videoContainer.style.display = 'flex';
+//         videoContainer.style.flexWrap = 'wrap';
+//         videoContainer.style.flexDirection = 'row';
+//         videoContainer.style.marginLeft = '10px';
+//         videoContainer.style.justifyContent = 'flex-start';
 //     } else {
 //         console.error('기존 요소를 찾을 수 없습니다. 강력 새로고침 후 재실행합니다.');
 //         chrome.runtime.sendMessage({action: "forceReload"});
