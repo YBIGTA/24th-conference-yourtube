@@ -8,7 +8,7 @@ import React from "react";
 import {Box, Button, Typography} from "@mui/material";
 import tubeImage from "../static/Tube.png";
 
-const Popup = ({handleOpen}) => {
+const Popup = ({handleOpen, handleCategoryRequest}) => {
 
 
     return(
@@ -28,7 +28,12 @@ const Popup = ({handleOpen}) => {
 
             <Box marginBottom={2}>
                 <Button variant={"contained"} onClick={handleOpen}>
-                    수동 업데이트
+                    구독 영상 가져오기
+                </Button>
+            </Box>
+            <Box marginBottom={2}>
+                <Button variant={"contained"} onClick={handleCategoryRequest}>
+                    카테고리 분류
                 </Button>
             </Box>
         </>

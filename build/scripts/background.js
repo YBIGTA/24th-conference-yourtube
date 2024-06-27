@@ -1,4 +1,3 @@
-// background.js
 /* global chrome */
 /*
 브라우저 영역에서 작동하는 스크립트.
@@ -21,10 +20,26 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
 
 chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
     if (request.action === "fetchData") {
-        fetch(chrome.runtime.getURL('data/testData600.json'))
+        fetch(chrome.runtime.getURL('data/subscriptionVideos.json'))
             .then(response => response.json())
             .then(data => sendResponse({ success: true, data: data }))
             .catch(error => sendResponse({ success: false, error: error }));
         return true; // Will respond asynchronously
+    }
+});
+
+chrome.storage.onChanged.addListener((changes, namespace) => {
+    for (let [key, { oldValue, newValue }] of Object.entries(changes)) {
+        console.log(`Storage key "${key}" in namespace "${namespace}" changed. 
+                     Old value was "${oldValue}", new value is "${newValue}".`);
+
+        // If the change is relevant, notify the content script
+        if (key === 'subCategories') {
+            chrome.tabs.query({ url: "https://www.youtube.com/feed/subscriptions" }, (tabs) => {
+                tabs.forEach((tab) => {
+                    chrome.tabs.sendMessage(tab.id, { action: 'updateCategories', data: newValue });
+                });
+            });
+        }
     }
 });

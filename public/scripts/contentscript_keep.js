@@ -1,5 +1,7 @@
 // /* global chrome */
 //
+// let subCategories = {};  // subCategories 객체 정의
+//
 // async function replaceNewVideos() {
 //     var existingElement = document.querySelector('.style-scope ytd-rich-grid-renderer');
 //
@@ -37,7 +39,6 @@
 //             display: flex;
 //             flex-wrap: wrap;
 //             width: 90%;
-//             background-color: yellow;
 //         `;
 //
 //         const settingsContainer = document.createElement('div');
@@ -57,24 +58,63 @@
 //             width: 100%;
 //         `;
 //
-//         const categoryList = [
-//             "전체", "영화/애니메이션", "자동차/교통", "음악", "애완동물/동물",
-//             "스포츠", "여행/이벤트", "게임", "인물/블로그", "코미디",
-//             "엔터테인먼트", "뉴스/정치", "노하우/스타일", "교육", "과학기술",
-//             "비영리/사회운동"
-//         ];
+//         const categoryMapping = {
+//             0: "전체",
+//             1: "영화/애니메이션",
+//             2: "자동차/교통",
+//             10: "음악",
+//             15: "반려동물/동물",
+//             17: "스포츠",
+//             19: "여행/이벤트",
+//             20: "게임",
+//             22: "인물/블로그",
+//             23: "코미디",
+//             24: "엔터테인먼트",
+//             25: "뉴스/정치",
+//             26: "노하우/스타일",
+//             27: "교육",
+//             28: "과학기술",
+//             29: "비영리/사회운동"
+//         };
 //
+//         const categoryList = Object.values(categoryMapping);
+//         const categoryKeys = Object.keys(categoryMapping);
 //         let selectedCategoryIndex = null;
+//         let selectedSubCategoryIndex = null;
 //         let displayedCategories = categoryList.slice(0, 16);
-//         let subCategories = {};
+//         let sampleData = [];
+//
+//         function handleSubCategoryClick(index, subIndex, event) {
+//             if (selectedCategoryIndex === index && selectedSubCategoryIndex === subIndex) {
+//                 selectedSubCategoryIndex = null;
+//             } else {
+//                 selectedCategoryIndex = index;
+//                 selectedSubCategoryIndex = subIndex;
+//             }
+//             updateCategories(event);
+//         }
 //
 //         function handleClick(index, event) {
 //             if (selectedCategoryIndex === index) {
 //                 selectedCategoryIndex = null;
+//                 selectedSubCategoryIndex = null;
 //             } else {
 //                 selectedCategoryIndex = index;
+//                 selectedSubCategoryIndex = null;
 //             }
 //             updateCategories(event);
+//         }
+//
+//         function sortVideosByPublishDate(videos) {
+//             return videos.sort((a, b) => new Date(b.published) - new Date(a.published));
+//         }
+//
+//         function displayFilteredVideos(videos, container) {
+//             container.innerHTML = '';
+//             videos.forEach(videoData => {
+//                 const videoBox = createYoutubeBox(videoData);
+//                 container.appendChild(videoBox);
+//             });
 //         }
 //
 //         function updateCategories(event) {
@@ -89,7 +129,6 @@
 //                     align-items: center;
 //                     margin-bottom: 1rem;
 //                     position: relative;
-//                     background-color: blue;
 //                 `;
 //
 //                 const categoryBox = document.createElement('div');
@@ -110,17 +149,16 @@
 //                 categoryBox.addEventListener('click', (event) => handleClick(index, event));
 //                 categoryBoxContainer.appendChild(categoryBox);
 //
-//                 if (selectedCategoryIndex === index && event) {
+//                 if (selectedCategoryIndex === index && event && index !== 0) {
 //                     const addCircleIconContainer = document.createElement('div');
 //                     addCircleIconContainer.className = 'add-circle-icon-container';
 //                     addCircleIconContainer.style = `
 //                         display: flex;
 //                         align-items: center;
-//                         justify-content: center;
+//                         justify-content: flex-start;
 //                         width: 100%;
 //                         margin-top: 1rem;
 //                         flex-direction: row;
-//                         background-color: red;
 //                     `;
 //
 //                     const addCircleIcon = document.createElement('div');
@@ -139,7 +177,6 @@
 //                     const iconCircle = iconSvg.querySelector('circle');
 //                     const iconLines = iconSvg.querySelectorAll('line');
 //
-//                     // Hover 효과를 추가
 //                     addCircleIcon.addEventListener('mouseenter', () => {
 //                         iconCircle.setAttribute('fill', '#F1F1F1');
 //                         iconCircle.setAttribute('stroke', '#F1F1F1');
@@ -156,25 +193,24 @@
 //                     addCircleIconContainer.appendChild(addCircleIcon);
 //                     categoryBoxContainer.appendChild(addCircleIconContainer);
 //
-//                     // 서브카테고리 추가
 //                     if (subCategories[category]) {
-//                         subCategories[category].forEach(subCategory => {
+//                         subCategories[category].forEach((subCategory, subIndex) => {
 //                             const subCategoryBox = document.createElement('div');
 //                             subCategoryBox.style = `
-//                                 background-color: #282828;
-//                                 color: #EFEFEF;
+//                                 background-color: ${selectedCategoryIndex === index && selectedSubCategoryIndex === subIndex ? "#F1F1F1" : "#282828"};
+//                                 color: ${selectedCategoryIndex === index && selectedSubCategoryIndex === subIndex ? "#0F0F0F" : "#EFEFEF"};
 //                                 padding: 0.7rem 1.7rem;
 //                                 border-radius: 0.5rem;
 //                                 display: flex;
 //                                 align-items: center;
 //                                 justify-content: center;
-//                                 margin-top: 1rem;
 //                                 margin-right: 1rem;
 //                                 cursor: pointer;
 //                                 user-select: none;
 //                                 font-size: 14px;
 //                             `;
 //                             subCategoryBox.textContent = subCategory;
+//                             subCategoryBox.addEventListener('click', (event) => handleSubCategoryClick(index, subIndex, event));
 //                             addCircleIconContainer.insertBefore(subCategoryBox, addCircleIconContainer.firstChild);
 //                         });
 //                     }
@@ -182,6 +218,20 @@
 //
 //                 categoryContainer.appendChild(categoryBoxContainer);
 //             });
+//
+//             let filteredVideos = [];
+//             if (selectedCategoryIndex !== null) {
+//                 const categoryKey = categoryKeys[selectedCategoryIndex];
+//                 if (categoryKey === "0") {
+//                     filteredVideos = sampleData;  // 전체 카테고리의 경우 모든 비디오를 포함
+//                 } else {
+//                     filteredVideos = sampleData.filter(video => video.ChannelId == categoryKey);
+//                 }
+//             } else {
+//                 filteredVideos = sampleData;
+//             }
+//             filteredVideos = sortVideosByPublishDate(filteredVideos);
+//             displayFilteredVideos(filteredVideos, videoContainer);
 //         }
 //
 //         const categorySettings = document.createElement('div');
@@ -205,7 +255,7 @@
 //                 top: 50%;
 //                 left: 50%;
 //                 transform: translate(-50%, -50%);
-//                 width: 300px;
+//                 width: 350px;
 //                 background: #fff;
 //                 border-radius: 8px;
 //                 box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
@@ -214,20 +264,29 @@
 //             `;
 //
 //             const title = document.createElement('h3');
-//             title.textContent = "카테고리 설정";
+//             title.textContent = "메인 카테고리 설정";
 //             title.style = `
 //                 margin-top: 0;
-//                 margin-bottom: 15px;
+//                 margin-bottom: 20px;
+//                 font-size: 16px;
+//                 text-align: center;  /* 제목을 중앙 정렬 */
 //             `;
 //             popup.appendChild(title);
 //
 //             const checkboxContainer = document.createElement('div');
+//             checkboxContainer.style = `
+//                 display: grid;
+//                 grid-template-columns: 1fr 1fr;  /* 두 열로 나누기 */
+//                 gap: 10px;  /* 항목 간의 간격 */
+//                 margin-bottom: 15px;
+//             `;
+//
 //             categoryList.forEach((category, index) => {
 //                 const checkboxLabel = document.createElement('label');
 //                 checkboxLabel.style = `
 //                     display: flex;
 //                     align-items: center;
-//                     margin-bottom: 10px;
+//                     font-size: 14px;
 //                 `;
 //                 const checkbox = document.createElement('input');
 //                 checkbox.type = 'checkbox';
@@ -240,10 +299,17 @@
 //             });
 //             popup.appendChild(checkboxContainer);
 //
+//             const buttonContainer = document.createElement('div');
+//             buttonContainer.style = `
+//                 display: flex;
+//                 justify-content: center;  /* 중앙 정렬 */
+//                 margin-top: 15px;
+//                 gap: 10px;  /* 버튼 간의 간격 추가 */
+//             `;
+//
 //             const saveButton = document.createElement('button');
 //             saveButton.textContent = "저장";
 //             saveButton.style = `
-//                 margin-top: 15px;
 //                 padding: 8px 12px;
 //                 background: #007bff;
 //                 color: #fff;
@@ -255,13 +321,11 @@
 //                 document.body.removeChild(popup);
 //                 updateCategories();
 //             });
-//             popup.appendChild(saveButton);
+//             buttonContainer.appendChild(saveButton);
 //
 //             const closeButton = document.createElement('button');
 //             closeButton.textContent = "닫기";
 //             closeButton.style = `
-//                 margin-top: 15px;
-//                 margin-left: 10px;
 //                 padding: 8px 12px;
 //                 background: #6c757d;
 //                 color: #fff;
@@ -272,8 +336,9 @@
 //             closeButton.addEventListener('click', () => {
 //                 document.body.removeChild(popup);
 //             });
-//             popup.appendChild(closeButton);
+//             buttonContainer.appendChild(closeButton);
 //
+//             popup.appendChild(buttonContainer);
 //             document.body.appendChild(popup);
 //         }
 //
@@ -295,8 +360,11 @@
 //                 top: 50%;
 //                 left: 50%;
 //                 transform: translate(-50%, -50%);
-//                 width: 300px;
+//                 width: 350px;
 //                 background: #fff;
+//                 display: flex;
+//                 flex-direction: column;
+//                 align-items: center;
 //                 border-radius: 8px;
 //                 box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
 //                 padding: 20px;
@@ -304,10 +372,12 @@
 //             `;
 //
 //             const title = document.createElement('h3');
-//             title.textContent = "새로운 카테고리 추가";
+//             title.textContent = "맞춤형 카테고리 추가";
 //             title.style = `
 //                 margin-top: 0;
 //                 margin-bottom: 15px;
+//                 font-size: 16px;
+//                 text-align: center;  /* 제목을 중앙 정렬 */
 //             `;
 //             popup.appendChild(title);
 //
@@ -319,6 +389,7 @@
 //                 margin-bottom: 10px;
 //                 border: 1px solid #ccc;
 //                 border-radius: 4px;
+//                 box-sizing: border-box;
 //             `;
 //             popup.appendChild(categoryNameInput);
 //
@@ -331,11 +402,21 @@
 //                 border: 1px solid #ccc;
 //                 border-radius: 4px;
 //                 resize: none;
+//                 box-sizing: border-box;
 //             `;
 //             popup.appendChild(categoryDescriptionInput);
 //
+//             const subCategoryButtonContainer = document.createElement('div');
+//             subCategoryButtonContainer.style = `
+//                 display: flex;
+//                 justify-content: center;  /* 중앙 정렬 */
+//                 margin-top: 10px;
+//                 gap: 10px;  /* 버튼 간의 간격 추가 */
+//                 width: 100%;
+//             `;
+//
 //             const saveButton = document.createElement('button');
-//             saveButton.textContent = "저장";
+//             saveButton.textContent = "추가";
 //             saveButton.style = `
 //                 padding: 8px 12px;
 //                 background: #007bff;
@@ -344,19 +425,56 @@
 //                 border-radius: 4px;
 //                 cursor: pointer;
 //             `;
-//             saveButton.addEventListener('click', () => {
+//
+//             saveButton.addEventListener('click', async () => {
 //                 const categoryName = categoryNameInput.value.trim();
+//                 const categoryDescription = categoryDescriptionInput.value.trim();
+//
 //                 if (categoryName) {
 //                     addNewSubCategory(index, categoryName);
+//
+//                     const sendDataToGCP = async () => {
+//                         console.log("GCP function으로 세부 카테고리 모델 데이터 전달");
+//
+//                         const subCategoryData = {
+//                             userId: "ds",
+//                             wholeCategoryID: 25,
+//                             subCategoryName: categoryName,
+//                             subCategoryDescription: categoryDescription
+//                         };
+//
+//                         console.log("전달하는 데이터:", subCategoryData);
+//
+//                         const gcpFunctionUrl = "https://asia-northeast3-yourtube-427304.cloudfunctions.net/sub-category-final";
+//                         try {
+//                             const response = await fetch(gcpFunctionUrl, {
+//                                 method: 'POST',
+//                                 headers: {
+//                                     "Content-Type": "application/json",
+//                                 },
+//                                 body: JSON.stringify(subCategoryData),
+//                             });
+//
+//                             if (!response.ok) {
+//                                 throw new Error('Network response was not ok ' + response.statusText);
+//                             }
+//
+//                             const responseData = await response.json();
+//                             console.log("Response from Cloud Function:", responseData);
+//                         } catch (error) {
+//                             console.error('Error sending data to GCP:', error);
+//                         }
+//                     };
+//
+//                     await sendDataToGCP();
 //                 }
 //                 document.body.removeChild(popup);
 //             });
-//             popup.appendChild(saveButton);
+//             subCategoryButtonContainer.appendChild(saveButton);
 //
 //             const closeButton = document.createElement('button');
 //             closeButton.textContent = "닫기";
 //             closeButton.style = `
-//                 margin-left: 10px;
 //                 padding: 8px 12px;
 //                 background: #6c757d;
 //                 color: #fff;
@@ -367,10 +485,27 @@
 //             closeButton.addEventListener('click', () => {
 //                 document.body.removeChild(popup);
 //             });
-//             popup.appendChild(closeButton);
+//             subCategoryButtonContainer.appendChild(closeButton);
 //
+//             popup.appendChild(subCategoryButtonContainer);
 //             document.body.appendChild(popup);
 //         }
+//
+//         // 페이지 로드 시 localStorage에서 서브 카테고리를 불러오는 함수
+//         document.addEventListener('DOMContentLoaded', () => {
+//             const storedSubCategories = JSON.parse(localStorage.getItem('subCategories')) || {};
+//             for (const [mainCategory, subCategoryList] of Object.entries(storedSubCategories)) {
+//                 if (!subCategories[mainCategory]) {
+//                     subCategories[mainCategory] = [];
+//                 }
+//                 subCategories[mainCategory].push(...subCategoryList);
+//             }
+//
+//             // Log the retrieved subCategories to verify
+//             console.log('Retrieved subCategories:', subCategories);
+//
+//             updateCategories();
+//         });
 //
 //         function addNewSubCategory(index, categoryName) {
 //             const mainCategory = displayedCategories[index];
@@ -378,6 +513,16 @@
 //                 subCategories[mainCategory] = [];
 //             }
 //             subCategories[mainCategory].push(categoryName);
+//             // Update localStorage
+//             let storedSubCategories = JSON.parse(localStorage.getItem('subCategories')) || {};
+//             if (!storedSubCategories[mainCategory]) {
+//                 storedSubCategories[mainCategory] = [];
+//             }
+//             storedSubCategories[mainCategory].push(categoryName);
+//             localStorage.setItem('subCategories', JSON.stringify(storedSubCategories));
+//
+//             // Log the stored subCategories to verify
+//             console.log('Stored subCategories:', storedSubCategories);
 //
 //             updateCategories();
 //         }
@@ -387,7 +532,6 @@
 //         mainContainer.appendChild(videoContainer);
 //         parentElement.appendChild(mainContainer);
 //
-//         let sampleData;
 //         try {
 //             const response = await new Promise((resolve, reject) => {
 //                 chrome.runtime.sendMessage({ action: "fetchData" }, (response) => {
@@ -400,6 +544,7 @@
 //             });
 //             sampleData = response;
 //             console.log("Data: ", sampleData);
+//             updateCategories();
 //         } catch (error) {
 //             console.error('Error fetching the sample data:', error);
 //             return;
@@ -612,11 +757,6 @@
 //
 //             return youtubeBox;
 //         }
-//
-//         sampleData.forEach(videoData => {
-//             const videoBox = createYoutubeBox(videoData);
-//             videoContainer.appendChild(videoBox);
-//         });
 //
 //         parentElement.appendChild(mainContainer);
 //
