@@ -87,7 +87,7 @@ YouTube 사용자들은 추천 알고리즘으로 인해 자신의 원래 목적
       - Sentence Transformer 기반의 <a href="https://huggingface.co/sentence-transformers/paraphrase-MiniLM-L6-v2" target="_blank">paraphrase-MiniLM-L6-v2</a> 모델.
       - 카테고리별로 분류된 영상들을 사용자가 설정 가능한 세부 카테고리를 기준으로 분류한다.
    - Mongo DB
-        - (Description)
+        - 영상들의 세부 정보와 분류된 카테고리 정보를 저장한다.
 
 ## 결과 및 주요 기능
 <img src="src/YourTube_test3 .png" alt="YourTube Test 3" width="80%" />
