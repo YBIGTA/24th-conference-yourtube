@@ -225,7 +225,7 @@ async function replaceNewVideos() {
                 if (categoryKey === "0") {
                     filteredVideos = sampleData;  // 전체 카테고리의 경우 모든 비디오를 포함
                 } else {
-                    filteredVideos = sampleData.filter(video => video.ChannelId == categoryKey);
+                    filteredVideos = sampleData.filter(video => video.categoryId == categoryKey);
                 }
             } else {
                 filteredVideos = sampleData;

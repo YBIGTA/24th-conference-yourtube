@@ -7,14 +7,15 @@ popup.html이 index.html과 같은 의미이다.
 import React from "react";
 import {Box, Button, Typography} from "@mui/material";
 import tubeImage from "../static/Tube.png";
+import YourTube from "../static/YourTube_logo.png";
 
 const Popup = ({handleOpen, handleCategoryRequest}) => {
 
 
     return(
         <>
-        <Box width={"80%"} height={"auto"} display={"flex"} justifyContent={"center"} alignItems={"center"}>
-                <img src={tubeImage} alt={"튜브 따봉 이미지"} width={"80%"}/>
+        <Box width={"80%"} height={"auto"} display={"flex"} justifyContent={"center"} alignItems={"center"} paddingY={2}>
+                <img src={YourTube} alt={"튜브 따봉 이미지"} width={"70%"}/>
             </Box>
 
             <Box width={"90%"} height={"auto"} marginBottom={2}>

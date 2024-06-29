@@ -18,6 +18,9 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
     }
 });
 
+//subscriptionVideos.json
+//newvideos.json
+// newvideos_final.json
 chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
     if (request.action === "fetchData") {
         fetch(chrome.runtime.getURL('data/subscriptionVideos.json'))
