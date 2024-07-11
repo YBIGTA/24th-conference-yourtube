@@ -35,7 +35,7 @@ function App() {
       }
       const data = await response.json();
       console.log("Response from Flask :", data)
-        window.alert(message)
+        // window.alert(message)
 
     } catch (error) {
       console.error('Failed to fetch:', error);
@@ -148,7 +148,7 @@ function App() {
 
                 const responseData = await gcpResponse.json();
                 console.log("Response from Cloud Function:", responseData);
-                alert("Data sent to GCP successfully!");
+                // alert("Data sent to GCP successfully!");
 
                 // Here, add the logic to save responseData to MongoDB
                 // Example:

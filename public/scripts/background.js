@@ -23,7 +23,7 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
 // newvideos_final.json
 chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
     if (request.action === "fetchData") {
-        fetch(chrome.runtime.getURL('data/subscriptionVideos.json'))
+        fetch(chrome.runtime.getURL('data/newvideos_final.json'))
             .then(response => response.json())
             .then(data => sendResponse({ success: true, data: data }))
             .catch(error => sendResponse({ success: false, error: error }));
