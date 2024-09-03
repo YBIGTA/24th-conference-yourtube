@@ -1,4 +1,0 @@
-# https://www.robotstxt.org/robotstxt.html
-/*모든 크롤러에게 크롤링 허용하지 않음*/
-User-agent: *
-Disallow: /
