@@ -7,4 +7,5 @@
 /dataSources/
 /dataSources.local.xml
 # Ignore environment variable files
-Backend_API_Flask/.env
+.env
+.DS_Store
