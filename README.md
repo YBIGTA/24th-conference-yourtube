@@ -1,4 +1,4 @@
-# YourTube
+# YourTube - 컨퍼런스 시연용 코드입니다 (서비스 코드는 추후 공개 예정)
 
 <div align="center">
 <img src="Extension_Front/src/yourtube_title.png" alt="YourTube Title Logo" width="80%" />
